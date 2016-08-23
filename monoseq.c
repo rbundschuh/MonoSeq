@@ -144,6 +144,7 @@ void usage(void)
 {
   fprintf(stderr,"monoseq usage: monoseq [options] <site_des> [<fastq_file>]\n");
   fprintf(stderr,"          -q : use qseq file\n");
+  fprintf(stderr,"    -d <del> : use <del> as output field delimiter\n");
 }
 
 int main(int argc, char **argv)
@@ -156,6 +157,7 @@ int main(int argc, char **argv)
   int FirstArg;                 /* first real command line argument  */
   int ReadStdin;                /* non-zero if input from stdin      */
   int WantFastqFile;            /* non-zero if fastq format          */
+  char OutputSeparator;         /* output separator ('\0' if none)   */
   int *Workspace;               /* workspace for dynamic programming */
   int Histogram[2000];          /* homopolymer length histogram      */
   char Line[10000];             /* one line from input file          */
@@ -164,12 +166,24 @@ int main(int argc, char **argv)
   FILE *fp;                     /* qseq or fastq file                */
 
   /* interpret command line arguments */
+  OutputSeparator='\0';
   WantFastqFile=1;
   for(FirstArg=1;FirstArg<argc && argv[FirstArg][0]=='-' && argv[FirstArg][1];
       FirstArg++) {
     switch(argv[FirstArg][1]) {
     case 'q':
       WantFastqFile=0;
+      break;
+    case 'd':
+      if (++FirstArg>=argc || argv[FirstArg][0]=='\0') {
+	usage();
+	return(1);
+      }
+      if (!strcmp(argv[FirstArg],"\\t")) {
+	OutputSeparator='\t';
+      } else {
+	OutputSeparator=argv[FirstArg][0];
+      }
       break;
     default:
       usage();
@@ -267,27 +281,41 @@ int main(int argc, char **argv)
   
   /* output results */
   printf("# coverage max_homopol wt_homopol variant_frequency counts raw_frequencies called_frequencies\n");
-  printf("%4d %3d %3d ",coverage,maxlen,pDescription->RepeatLength);
-  if (pDescription->RepeatLength==k0) {
-    printf("%5.3f",f);
-  } else if (pDescription->RepeatLength==k1) {
-    printf("%5.3f",1-f);
+  if (OutputSeparator=='%') {
+    strcpy(Line,"%%%.3f");
+    printf("%d%%%d%%%d",coverage,maxlen,pDescription->RepeatLength);
+  } else if (OutputSeparator) {
+    sprintf(Line,"%c%%.3f",OutputSeparator);
+    printf("%d%c%d%c%d",coverage,OutputSeparator,maxlen,
+	   OutputSeparator,pDescription->RepeatLength);
   } else {
-    printf("%5.3f",1.0);
+    printf("%4d %3d %3d",coverage,maxlen,pDescription->RepeatLength);
+    strcpy(Line," %5.3f");
+  }
+  if (pDescription->RepeatLength==k0) {
+    printf(Line,f);
+  } else if (pDescription->RepeatLength==k1) {
+    printf(Line,1-f);
+  } else {
+    printf(Line,1.0);
   }
   for(i=0;i<=maxlen;i++) {
-    printf(" %4d",Histogram[i]);
+    if (OutputSeparator) {
+      printf("%c%d",OutputSeparator,Histogram[i]);
+    } else {
+      printf(" %4d",Histogram[i]);
+    }
   }
   for(i=0;i<=maxlen;i++) {
-    printf(" %5.3f",(double)Histogram[i]/(double)coverage);
+    printf(Line,(double)Histogram[i]/(double)coverage);
   }
   for(i=0;i<=maxlen;i++) {
     if (i==k0) {
-      printf(" %5.3f",1-f);
+      printf(Line,1-f);
     } else if (i==k1) {
-      printf(" %5.3f",f);
+      printf(Line,f);
     } else {
-      printf(" %5.3f",0.0);
+      printf(Line,0.0);
     }
   }
   printf("\n");
@@ -299,5 +327,4 @@ int main(int argc, char **argv)
   
   return(0);
 }
-
 
