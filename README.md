@@ -17,7 +17,7 @@ should compile the source code.  You may have to adjust the line with XMLHEADERP
 
 Monoseq analyzes one homopolymer repeat of one sample at a time.  Monoseq is called as
 
-    monoseq [-q] <site_description_file> [<fastq_file>]
+    monoseq [-q] [-d <del>] <site_description_file> [<fastq_file>]
     
 Here, the site description file is an XML file that defines the homopolymer to analyze.  The file chr10_125780753.xml is included with the source code as an example and contains comments explaining the meaning of every entry in the file.  Essentially, a homopolymer is specified by its flanking sequences and the homopolymer repeat itself.  In addition, the homopolymer definition file contains a few details how reads should be selected.  If in doubt, these parameters should be left at their default values in the sample file.
 
@@ -39,3 +39,5 @@ that sumarize the homopolymer call at the requested location.  These output valu
 5. The following numbers are the number of reads supporting each homopolymer length.  Since in this example the longest observed length is 10 (as indicated by the 10 under 2.), there are 11 of these numbers corresponding to homopolymer lengths 0 through 10.  In this example, 2 reads supported a homopolymer length of 8, 9 reads supported a homopolymer length of 9, and 2 reads supported a homopolymer length of 10.
 6. The following (in this example with a 10 as the maximal under 2. again 11) numbers are the unadjusted frequencies, i.e., the set of the numbers under 5. divided by the total number of reads from 1.
 7. The last set of  (in this example with a 10 as the maximal under 2. again 11) numbers are the adjusted frequencies.  These are calculated by taking into account the artifacts of an Illumina sequencer when sequencing homopolymer repeats under the assumption that only two alleles have non-zero true frequency.  The adjusted variant frequency reported in 4. is one minus the adjusted frequency reported for the wild type homopolymer length.
+
+The "-d <del>" option can be used to change the delimiter of the output.
