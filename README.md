@@ -40,4 +40,4 @@ that sumarize the homopolymer call at the requested location.  These output valu
 6. The following (in this example with a 10 as the maximal under 2. again 11) numbers are the unadjusted frequencies, i.e., the set of the numbers under 5. divided by the total number of reads from 1.
 7. The last set of  (in this example with a 10 as the maximal under 2. again 11) numbers are the adjusted frequencies.  These are calculated by taking into account the artifacts of an Illumina sequencer when sequencing homopolymer repeats under the assumption that only two alleles have non-zero true frequency.  The adjusted variant frequency reported in 4. is one minus the adjusted frequency reported for the wild type homopolymer length.
 
-The "-d <del>" option can be used to change the delimiter of the output.
+The "-d &lt;del&gt;" option can be used to change the delimiter of the output.
