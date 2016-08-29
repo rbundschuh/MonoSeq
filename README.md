@@ -5,6 +5,13 @@ MonoSeq is a tool that determines variations in homopolymer run length in Illumi
 
 This tool was developed at The Ohio State University by Ralf Bundschuh, Chris Walker, and Paul Goodfellow.
 
+### Citation ###
+
+If you use this software in your work, please include a citation to:
+
+*MonoSeq Variant Caller Reveals Novel Mononucleotide Run Indel Mutations in Tumors with Defective DNA Mismatch Repair* (2016) 
+Walker, C.J., Mirande, M.A., O'Hern, M.J., Blachly, J.S., Moyer, C.L., Ivanovich, J., Kroll, K.W., Eisfeld, A.K., Sapp, C.E., Mutch, D.G., Cohn, D.E., Bundschuh, R., and Goodfellow, P.J., *Human Mutation* (2016) doi:10.1002/humu.23036.
+
 ### Installation ###
 
 Download the source files to a directory on a unix based system (including Mac).  The only dependency of the software is the XML library libxml2.  The library itself should be installed on most distributions but you may have to install its header files in a package typically called libxml2-dev or something similar. Typing
